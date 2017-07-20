@@ -1,0 +1,12 @@
+This is library "lsMPI" under development by Xiaolong Cui at the University of Pittsburgh.
+lsMPI is a library for fault-tolerant  MPI that exploits the Lazy Shadowing computational model.
+
+The most current version of lsMPI is under the directory of ./reboot/. It supports both point-to-point communication 
+and collective communication, communicator and group management, wildcard receive. It supports re-juvenation after 
+non-crash failures, shadow collocation, and shadow leaping features of Lazy Shadowing.
+
+User-level in-memory Checkpointing is simulated using the same technique as that used in shadow leaping. Each 
+process has a "buddy" that stores a copy of the process' state in its memory, and the state is transferred from a 
+process to its buddy using MPI messages. Please see directorey ./checkpoint for more implementation details. 
+
+
