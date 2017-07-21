@@ -3,7 +3,9 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#ifdef USE_RDMA
 #include <rdma/rsocket.h>
+#endif
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>

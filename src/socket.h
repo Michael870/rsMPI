@@ -5,7 +5,7 @@
 #define BIND_TIMES 10
 #define SOCKET_BUF_INIT_SIZE 131072 //128 k
 #define USE_TCP
-#define USE_RDMA
+//#define USE_RDMA
 
 int get_my_ip(char *ip);
 int socket_connect();

@@ -1,12 +1,43 @@
-This is library "lsMPI" under development by Xiaolong Cui at the University of Pittsburgh.
-lsMPI is a library for fault-tolerant  MPI that exploits the Lazy Shadowing computational model.
+This is library "rsMPI" under development by Xiaolong Cui at the University of Pittsburgh.
+rsMPI is a library for fault-tolerant Message Passing Interface (MPI) that exploits the Rejuvenating Shadows computational model.
 
-The most current version of lsMPI is under the directory of ./reboot/. It supports both point-to-point communication 
-and collective communication, communicator and group management, wildcard receive. It supports re-juvenation after 
-non-crash failures, shadow collocation, and shadow leaping features of Lazy Shadowing.
+This implementation is MPI-1.0 compatible. It supports blocking/non-blocking point-to-point communication, 
+collective communication, communicator and group management, wildcard receive, and topology. For fault tolerance, it supports the 
+re-juvenation after non-crash failures, shadow collocation, and shadow leaping features of Rejuvenating Shadows.
+Existing and fixed bugs are reporeted in ./bugs.
 
 User-level in-memory Checkpointing is simulated using the same technique as that used in shadow leaping. Each 
 process has a "buddy" that stores a copy of the process' state in its memory, and the state is transferred from a 
 process to its buddy using MPI messages. Please see directorey ./checkpoint for more implementation details. 
 
+Prerequirements
+==================================================================================================
+1. RDMA socket library (rsocket)
+2. MPI library
 
+Compile 
+==================================================================================================
+To compile the rsMPI library:
+1. cd rsMPI
+2. mkdir obj
+3. mkdir lib
+4. cd ./src
+5. make
+
+Shared object files for rsMPI will be generated and stored in ./lib
+Then you can compile your MPI application and link it to the rsMPI library.
+6. mpicc -L/path/to/rsMPI -lrsmpi -lmpi ...
+
+Run
+==================================================================================================
+Remember to set $LD_LIBRARY_PATH before running your application
+1. export LD_LIBRARY_PATH=/path/to/rsMPI:$LD_LIBRARY_PATH
+
+Generate a rankfile to contro process mapping and collocation, and use the provided configuration 
+file to specify the collocation ratio at run time. 
+Then you can launch your application code as usual, e.g., use mpirun
+2. mpirun -np .. -rf rankfile ...
+
+Questions
+==================================================================================================
+Any questions or bug reporting can be addressed to Xiaolong at sunshine870@gmail.com

@@ -96,6 +96,39 @@ int is_sc(int rank){
         return 1;
 }
 
+
+void read_config(){
+    FILE* fp = fopen("./configure.txt", "r");
+
+    if(fp == NULL){
+        printf("Fail to read from configuration file!\n");
+        exit(-1);
+    }
+ 
+    fscanf(fp, "%d", &shadow_ratio);
+    if(shadow_ratio <= 0 || shadow_ratio > 5){
+        printf("Wrong specification of shadow_ratio (=%d)!\n", shadow_ratio);
+        exit(-1);
+    }
+    fclose(fp);
+    ls_app_size = ls_world_size * shadow_ratio / (1 + 2 * shadow_ratio);
+    num_of_sc = ls_world_size - 2 * ls_app_size;
+    if(ls_world_rank == 0){
+        int verify_num;
+        if(ls_app_size % shadow_ratio == 0)
+            verify_num = ls_app_size / shadow_ratio;
+        else
+            verify_num = ls_app_size / shadow_ratio + 1;
+        if(verify_num == num_of_sc){
+            printf("This is using lsMPI, the world size is %d, app size is %d\n", ls_world_size, ls_app_size);
+        }
+        else{
+            printf("Wrong configuration! World size is %d, app size is %d, shadow ratio is %d\n", ls_world_size, ls_app_size, shadow_ratio);
+            MPI_Abort(MPI_COMM_WORLD, -1);
+        }
+    }
+}
+
 void ls_init(){
     int i;
     int temp;
@@ -172,37 +205,6 @@ void report_failure(int rank){
 }
 
 
-void read_config(){
-    FILE* fp = fopen("./configure.txt", "r");
-
-    if(fp == NULL){
-        printf("Fail to read from configuration file!\n");
-        exit(-1);
-    }
- 
-    fscanf(fp, "%d", &shadow_ratio);
-    if(shadow_ratio <= 0 || shadow_ratio > 5){
-        printf("Wrong specification of shadow_ratio (=%d)!\n", shadow_ratio);
-        exit(-1);
-    }
-    fclose(fp);
-    ls_app_size = ls_world_size * shadow_ratio / (1 + 2 * shadow_ratio);
-    num_of_sc = ls_world_size - 2 * ls_app_size;
-    if(ls_world_rank == 0){
-        int verify_num;
-        if(ls_app_size % shadow_ratio == 0)
-            verify_num = ls_app_size / shadow_ratio;
-        else
-            verify_num = ls_app_size / shadow_ratio + 1;
-        if(verify_num == num_of_sc){
-            printf("This is using lsMPI, the world size is %d, app size is %d\n", ls_world_size, ls_app_size);
-        }
-        else{
-            printf("Wrong configuration! World size is %d, app size is %d, shadow ratio is %d\n", ls_world_size, ls_app_size, shadow_ratio);
-            MPI_Abort(MPI_COMM_WORLD, -1);
-        }
-    }
-}
 
 //void init_groups(){
 //    int triple[1][3]; 

@@ -1,5 +1,5 @@
 5/12/2017
-MPI_Isend/MPI_Irecv does not work in Fortran because the MPI_Request has different types, no idea of how to fix this
+MPI_Isend/MPI_Irecv does not work in Fortran because the MPI_Request has different types from C; no idea of how to fix this
 
 2/9/2017
 changed to init ls_my_main_failure_point to -2, so that if shadow detects failure before starting loop, it will not enter leaping from shadow to main
